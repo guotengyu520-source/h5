@@ -136,6 +136,13 @@ html, body {
 .s9-closing { margin-top:28px; font-size:15px; font-weight:600; color:#fff; letter-spacing:3px; text-align:center; }
 
 /* S10 */
+
+/* Toast */
+.s10-toast {
+  margin-top:12px; font-size:12px; color:#4CAF50; letter-spacing:2px;
+  opacity:0; transition:opacity 0.3s;
+}
+.s10-toast.show { opacity:1; }
 .s10-label { font-size:11px; color:rgba(255,255,255,0.2); letter-spacing:6px; }
 .s10-title { margin-top:8px; font-size:clamp(18px,5vw,22px); font-weight:700; letter-spacing:4px; color:#fff; }
 .s10-qr-placeholder { margin-top:20px; width:150px; height:150px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:16px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.12); font-size:12px; letter-spacing:2px; }
@@ -252,13 +259,14 @@ html, body {
   <section class="sec" id="sec10">
     <div class="s10-label fade-in">SHARE</div>
     <div class="s10-title fade-up" style="transition-delay:0.15s">分享这份温度</div>
-    <div class="s10-qr-placeholder fade-in" style="transition-delay:0.35s">[ 二维码 ]</div>
+    <div class="s10-qr-placeholder fade-in" style="transition-delay:0.35s"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQAQMAAAC6caSPAAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAACF0lEQVR4nO3bMXLCMBCF4WUoKDkCR/HR4Gg+So5ASeFhY+2uZNmQpIkEM/xbMEHW5+pFlmQhQn1yDVrqJrJLHyJHvYicSnPVZ4JAepB7Dqhfu21uYs1LHwikEzmmq1/iSZ4rdTinlnRZ130gkO7Ek3z3AdZCnJMMgbyMzHXQMcX5kp77lmQI5CUkyq/NRHKHqjn3gUC6EC2VyU6vcp5SkpPX3xdWEEgD8qQWEkn+uyCQfyU5pfMzPcqe+xZZC/E62xBIDyKS10TzNfVtpNIiTqysJQ+wEMi7EV80laj7x1Vk7/8Oo6xvKxBIB2ITg7mDqn9R3x31OgSJUTqPyRBIayIlyTZLyLuj+7wxlT5sqlB2ACCQPkQ9yYO6W9b7+tNUAQJpS8Q7aOw3jdbi/fzLoNskQyBtyTq31XAa2fbma+paTxUgkJakzq3Gpr2m576Wc0q5zyr8EEg7MmxSGq84L/Lw3LcJ6gSB9CCxVD9tDnSW3PqQG8QKAulA8vGPgw+wWp/qzDugy8klCORdSVRqv29bxvKy1CcPEwTSgaxq0DIC2yhtZTPY2KqCQLqQQUst21DPDtJrvbCCQNqS+nyy7EqS7aVnHASVh5f1EEhrUuV2OZ8c2ZbnUwUIpDeJwOZtKKm28SGQF5BIbZxcshap5wZ2LwikA4kqZP0D9nyT83LSHgJpTbTUzf3mJumPzaY9BPJ+hPrc+gYOntvifwk3MAAAAABJRU5ErkJggg==" style="width:150px;height:150px;border-radius:12px" alt="QR Code" /></div>
     <div class="s10-text fade-up" style="transition-delay:0.5s">扫描二维码<br>体验完整互动</div>
     <div class="s10-share-row fade-in" style="transition-delay:0.65s">
-      <div class="s10-share-btn">💬</div>
-      <div class="s10-share-btn">📱</div>
-      <div class="s10-share-btn">🔗</div>
+      <div class="s10-share-btn" id="btn-wechat" title="复制链接">💬</div>
+      <div class="s10-share-btn" id="btn-copy" title="复制链接">🔗</div>
+      <div class="s10-share-btn" id="btn-replay" title="重新体验">🔄</div>
     </div>
+    <div class="s10-toast" id="s10-toast">链接已复制！</div>
     <div class="s10-foot fade-in" style="transition-delay:0.8s">全国大学生广告艺术大赛<br>朗圣药业 · 赤尾品牌命题<br><span style="color:rgba(255,255,255,0.2)">探索热爱 · 赤尾相伴</span></div>
   </section>
 
@@ -384,6 +392,24 @@ rs();updateDots();
 setTimeout(()=>onEnter(0),300);
 requestAnimationFrame(loop);
 document.querySelectorAll(".stat-card").forEach(c=>{c.addEventListener("pointerdown",()=>{c.classList.add("flash");setTimeout(()=>c.classList.remove("flash"),400);});});
+// S10 share buttons
+const shareUrl="https://guotengyu520-source.github.io/h5/";
+document.getElementById("btn-copy").addEventListener("pointerdown",()=>{
+  navigator.clipboard.writeText(shareUrl).then(()=>{
+    const t=document.getElementById("s10-toast");t.textContent="链接已复制！";t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2000);
+  }).catch(()=>{
+    const t=document.getElementById("s10-toast");t.textContent=shareUrl;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),5000);
+  });
+});
+document.getElementById("btn-wechat").addEventListener("pointerdown",()=>{
+  navigator.clipboard.writeText(shareUrl).then(()=>{
+    const t=document.getElementById("s10-toast");t.textContent="链接已复制，去微信粘贴分享吧";t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);
+  });
+});
+document.getElementById("btn-replay").addEventListener("pointerdown",()=>{
+  document.getElementById("wrap").scrollTo({top:0,behavior:"smooth"});
+});
 </script>
 </body>
 </html>
+
